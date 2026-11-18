@@ -1,48 +1,45 @@
-# -*- coding: utf-8 -*-
 
-
-import matplotlib.pyplot as plt
 import numpy as np
-
-# river data
-data = np.genfromtxt("June-2021-Provo-River-Streamflow-Rates.csv", delimiter=",", skip_header=1, dtype=str)
-
-# dates
-x = data[:, 0]
-
-# river flow
-y_1 = data[:, 1].astype(float)
-y_2 = data[:, 2].astype(float)
-y_3 = data[:, 3].astype(float)
+import matplotlib.pyplot as plt
 
 
-y_4 = data[:, 4].astype(float)
-y_5 = data[:, 5].astype(float)
-# check
-print(x[:5])
-print(y_1[:5])
+# load river data
+def load_streamflow(filename):
+    data = np.genfromtxt(filename, delimiter=",", dtype=str, skip_header=1)
+
+    dates = data[:, 0]
+    flows = data[:, 1:6].astype(float)
+
+    return dates, flows
 
 
-# river graph
-plt.figure(figsize=(10, 6))
+# make the river graph
+def plot_streamflow(dates, flows, sites):
+    plt.figure(figsize=(10, 6))
 
-plt.plot(x, y_1, label="Site 10163000")
-plt.plot(x, y_2, label="Site 10155200")
+    plt.plot(dates, flows[:, 0], label="Site " + sites[0])
+    plt.plot(dates, flows[:, 1], label="Site " + sites[1])
+    plt.plot(dates, flows[:, 2], label="Site " + sites[2])
+    plt.plot(dates, flows[:, 3], label="Site " + sites[3])
+    plt.plot(dates, flows[:, 4], label="Site " + sites[4])
 
-plt.plot(x, y_3, label="Site 10155500")
-plt.plot(x, y_4, label="Site 10154200")
-plt.plot(x, y_5, label="Site 10155000")
+    # labels
+    plt.title("Provo River Streamflow June 2021")
+    plt.xlabel("Date")
+    plt.ylabel("Streamflow (cfs)")
 
-# labels it
-plt.title("Provo River Streamflow June 2021")
-plt.xlabel("Date")
+    plt.xticks(range(0, len(dates), 96), dates[::96], rotation=45)
 
-plt.ylabel("Streamflow (cfs)")
+    plt.legend()
+    plt.grid()
+    plt.tight_layout()
+    plt.show()
 
-plt.xticks(range(0, len(x), 96), x[::96], rotation=45)
 
-plt.legend()
-plt.grid()
-plt.tight_layout()
-plt.show()
+# main program
+sites = ["10163000", "10155200", "10155500", "10154200", "10155000"]
+
+dates, flows = load_streamflow("June-2021-Provo-River-Streamflow-Rates.csv")
+
+plot_streamflow(dates, flows, sites)
 
