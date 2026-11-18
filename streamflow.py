@@ -33,6 +33,7 @@ def plot_streamflow(dates, flows, sites):
     plt.legend()
     plt.grid()
     plt.tight_layout()
+    plt.savefig("provo_streamflow.png", dpi=150, bbox_inches="tight")
     plt.show()
 
 
