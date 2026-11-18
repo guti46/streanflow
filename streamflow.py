@@ -14,6 +14,27 @@ def load_streamflow(filename):
 
 
 # make the river graph
+
+def summarize(dates, flows, sites):
+    # Excel check for 10163000: max = 131.0, avg = 57.0
+    # river flow summary
+    print("Gauge       Max (cfs)    Date of max           Min (cfs)    Avg (cfs)")
+
+    with open("streamflow_summary.csv", "w") as file:
+        file.write("Gauge,Max (cfs),Date of max,Min (cfs),Avg (cfs)\n")
+
+        for i in range(len(sites)):
+            max_flow = np.max(flows[:, i])
+            min_flow = np.min(flows[:, i])
+            avg_flow = np.mean(flows[:, i])
+
+            max_row = np.argmax(flows[:, i])
+            max_date = dates[max_row]
+
+            print(f"{sites[i]:<12}{max_flow:<13.1f}{max_date:<22}{min_flow:<13.1f}{avg_flow:.1f}")
+
+            file.write(f"{sites[i]},{max_flow:.1f},{max_date},{min_flow:.1f},{avg_flow:.1f}\n")
+
 def plot_streamflow(dates, flows, sites):
     plt.figure(figsize=(10, 6))
 
@@ -43,4 +64,4 @@ sites = ["10163000", "10155200", "10155500", "10154200", "10155000"]
 dates, flows = load_streamflow("June-2021-Provo-River-Streamflow-Rates.csv")
 
 plot_streamflow(dates, flows, sites)
-
+summarize(dates, flows, sites)
